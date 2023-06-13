@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+        
         {
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
@@ -10,12 +11,15 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/DiscordBot/bin/Debug/net7.0/DiscordBot.dll",
+            "program": "${workspaceFolder}/DiscordBot/bin/Debug/net6.0/DiscordBot.dll",
             "args": [],
             "cwd": "${workspaceFolder}/DiscordBot",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
-            "stopAtEntry": false
+            "stopAtEntry": false,
+            "env": { 
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
         },
         {
             "name": ".NET Core Attach",
