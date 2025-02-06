@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+        <UserSecretsId>dotnet-DiscordBot2-8a3ce515-3c70-4f92-9806-9256d46df26a</UserSecretsId>
+        <AssemblyName>GoldenDelicious.DiscordBot.Service</AssemblyName>
+        <RootNamespace>GoldenDelicious.DiscordBot.Service</RootNamespace>
+        <Company>GoldenDelcious</Company>
+        <Product>DiscordBot</Product>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Discord.Net" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Hosting" />
+        <PackageReference Include="System.Drawing.Primitives" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DiscordBot.Data\DiscordBot.Data.csproj" />
+      <ProjectReference Include="..\GoldenDelicious.ServiceDefaults\GoldenDelicious.ServiceDefaults.csproj" />
+    </ItemGroup>
+</Project>

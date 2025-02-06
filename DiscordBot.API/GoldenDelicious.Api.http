@@ -1,0 +1,10 @@
+@DiscordBot.API_HostAddress = http://localhost:5222
+@ApiVersion = 1.0
+
+GET {{DiscordBot.API_HostAddress}}/api/catalog/items?api-version={{ApiVersion}}
+
+###
+
+GET {{DiscordBot.API_HostAddress}}/api/catalog/items/type/1/brand/2?api-version={{ApiVersion}}
+
+###
