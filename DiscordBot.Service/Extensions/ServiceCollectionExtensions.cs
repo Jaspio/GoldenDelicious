@@ -44,8 +44,8 @@ public static class ServiceCollectionExtensions
         builder.Services.AddSingleton<DiscordSocketClient>();
         builder.Services.AddSingleton<CommandService>();
 
-        builder.Services.Scan(scan =>
-            scan.FromAssembliesOf(typeof(ModuleBase)).AddClasses().AsImplementedInterfaces()
-        );
+        // builder.Services.Scan(scan =>
+        //     scan.FromAssembliesOf(typeof(ModuleBase)).AddClasses().AsImplementedInterfaces()
+        // );
     }
 }
