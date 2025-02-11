@@ -356,5 +356,4 @@ appsettings.Development.json
 
 
 # User-specific files
-/DiscordBot.API/DiscordBot.API.csproj
-/DiscordBot.Core/DiscordBot.Core.csproj
+.sonarqube/
