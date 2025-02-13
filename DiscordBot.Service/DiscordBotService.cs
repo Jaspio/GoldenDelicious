@@ -21,7 +21,7 @@ internal class DiscordBotService(
         client.Log += Log;
         commandService.Log += Log;
         client.MessageReceived += HandleCommandAsync;
-        
+
         // Register the command modules
         await commandService.AddModulesAsync(typeof(DiscordBotService).Assembly, null);
 
@@ -42,21 +42,22 @@ internal class DiscordBotService(
         _logger.Log(msg.Severity.ToLogLevel(), $"{msg.Source}: {msg.Message}");
         return Task.CompletedTask;
     }
-    
+
     private async Task HandleCommandAsync(SocketMessage messageParam)
     {
         // Don't process the command if it was a system message
-        if (messageParam is not SocketUserMessage message) return;
+        if (messageParam is not SocketUserMessage message)
+            return;
 
         // Create a number to track where the prefix ends and the command begins
         int argPos = 0;
 
         // Determine if the message is a command based on the prefix and make sure no bots trigger commands
-        if (
-            !(message.HasCharPrefix(_settings.CommandPrefix, ref argPos) || 
-              message.HasMentionPrefix(client.CurrentUser, ref argPos)) || 
-              message.Author.IsBot
-            )
+        bool isCommand =
+            message.HasCharPrefix(_settings.CommandPrefix, ref argPos)
+            || message.HasMentionPrefix(client.CurrentUser, ref argPos);
+
+        if (!isCommand || message.Author.IsBot)
             return;
 
         // Create a WebSocket-based command context based on the message
