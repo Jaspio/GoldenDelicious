@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DiscordBot.Data\DiscordBot.Data.csproj" />
+      <ProjectReference Include="..\DiscordBot.Service\DiscordBot.Service.csproj" />
       <ProjectReference Include="..\GoldenDelicious.ServiceDefaults\GoldenDelicious.ServiceDefaults.csproj" />
     </ItemGroup>
 

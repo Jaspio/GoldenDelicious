@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
+using GoldenDelicious.Common.Data;
 
 namespace GoldenDelicious.DiscordBot.Data.Models;
 
-public class Server : DatabaseEntity
+public class ServerEntity : DatabaseEntity
 {
     /// <summary>
     /// ID of the Discord server/Guild
@@ -28,4 +29,24 @@ public class Server : DatabaseEntity
     /// </summary>
     [NotMapped]
     public Color EmbedColor { get; set; }
+
+    public static explicit operator ServerEntity(DiscordServer server)
+    {
+        return new ServerEntity
+        { 
+            GuildId = server.GuildId,
+            Prefix = server.Prefix,
+            LoggingChannel = server.LoggingChannel,
+            EmbedColor = server.EmbedColor
+        };
+    }
+    
+    public static explicit operator DiscordServer(ServerEntity server)
+    {
+        return new DiscordServer(
+            server.GuildId, 
+            server.Prefix, 
+            server.LoggingChannel, 
+            server.EmbedColor);
+    }
 }

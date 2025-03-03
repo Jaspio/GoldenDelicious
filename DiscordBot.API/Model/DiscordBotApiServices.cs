@@ -1,14 +1,14 @@
-using GoldenDelicious.DiscordBot.Data.Contexts;
+using GoldenDelicious.DiscordBot.Service;
 
 namespace GoldenDelicious.DiscordBot.API.Model;
 
 public class DiscordBotApiServices(
-    DiscordBotDbContext context,
+    DiscordBotService discordBotService,
     IOptions<DiscordBotApiOptions> options,
     ILogger<DiscordBotApiServices> logger
 )
 {
-    public DiscordBotDbContext Context { get; } = context;
+    public DiscordBotService DiscordBotService { get; } = discordBotService;
     public IOptions<DiscordBotApiOptions> Options { get; } = options;
     public ILogger<DiscordBotApiServices> Logger { get; } = logger;
 }

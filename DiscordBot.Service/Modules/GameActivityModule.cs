@@ -1,23 +1,33 @@
-using System.Data;
 using System.Text;
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
+using GoldenDelicious.Common.Data;
+using GoldenDelicious.DiscordBot.Data.Models;
+using GoldenDelicious.DiscordBot.Data.Repositories;
 
-namespace DiscordBot.Service.Modules;
+namespace GoldenDelicious.DiscordBot.Service.Modules;
 
 public class GameActivityModule : ModuleBase<SocketCommandContext>
 {
+    private readonly IServiceProvider serviceProvider;
+    
+    public GameActivityModule(IServiceProvider serviceProvider)
+    {
+        this.serviceProvider = serviceProvider;
+    }
+    
     [Command("playing")]
     [Summary("Shows current gaming activities of all guild members")]
     public async Task ShowGamingActivitiesAsync()
     {
         var guild = Context.Guild;
         var activities = new Dictionary<string, List<string>>();
-
+        
         foreach (var user in guild.Users)
         {
-            var gameActivity = user.Activities!.FirstOrDefault(a => a.Type == ActivityType.Playing);
-
+            var gameActivity = user!.Activities!.FirstOrDefault(a => a.Type == ActivityType.Playing);
+            
             if (gameActivity != null)
             {
                 if (activities.ContainsKey(gameActivity.Name))
@@ -27,7 +37,7 @@ public class GameActivityModule : ModuleBase<SocketCommandContext>
                 activities[gameActivity.Name].Add(user.Username);
 
                 // Here you would log to your database
-                // await LogActivityToDatabase(user.Id, gameActivity.Name, DateTime.UtcNow);
+                //await LogActivityToDatabase(user, gameActivity.Name, DateTime.UtcNow);
             }
         }
 
@@ -61,19 +71,24 @@ public class GameActivityModule : ModuleBase<SocketCommandContext>
         return sb.ToString();
     }
 
-    // Example database logging method
-    /*
-    private async Task LogActivityToDatabase(ulong userId, string gameName, DateTime timestamp)
+    /*// Example database logging method
+    private async Task LogActivityToDatabase(
+        SocketGuildUser user,
+        string gameName,
+        DateTime timestamp
+    )
     {
         var activity = new GameActivity
         {
-            UserId = userId,
+            UserId = user.Id,
+            UserName = user.Username,
+            UserDisplayName = user.DisplayName,
             GameName = gameName,
-            Timestamp = timestamp
+            Timestamp = timestamp,
         };
 
-        _dbContext.GameActivities.Add(activity);
-        await _dbContext.SaveChangesAsync();
-    }
-    */
+        var gameActivityRepository = serviceProvider.GetRequiredService<IGameActivityRepository>();
+        
+        await gameActivityRepository.AddGameActivityAsync(activity, CancellationToken.None);
+    }*/
 }

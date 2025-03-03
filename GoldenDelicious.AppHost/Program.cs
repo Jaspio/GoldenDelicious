@@ -1,27 +1,63 @@
 using GoldenDelicious.AppHost;
+using GoldenDelicious.Common;
+using Projects;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
 builder.AddForwardedHeaders();
 
-// Add Aspire hosting components.
-var redis = builder.AddRedis("redis");
-var rabbitMq = builder.AddRabbitMQ("eventbus");
-var postgres = builder.AddPostgres("postgres").WithImage("ankane/pgvector").WithImageTag("latest");
-
-var discordBotDb = postgres.AddDatabase("discordbotdb");
-
 var launchProfileName = ShouldUseHttpForEndpoints() ? "http" : "https";
 
-// Add services to the container.
-var botApi = builder
-    .AddProject<Projects.DiscordBot_API>("bot-api")
-    .WithReference(rabbitMq)
-    .WithReference(discordBotDb);
+// Add Aspire hosting components.
+
+#region Redis Cache
+
+var redis = builder
+    .AddRedis("redis")
+    .WithRedisCommander();
+
+#endregion
+
+#region RabbitMQ
+
+var rabbitMq = builder
+    .AddRabbitMQ("eventbus");
+
+#endregion
+
+#region Database
+
+var postgresPassword = builder.AddParameter("postgres-password", secret: true);
+
+var botData = builder
+    .AddPostgres(ServiceNames.DatabaseServer, postgresPassword)
+    .WithImage("ankane/pgvector")
+    .WithImageTag("latest")
+    .AddDatabase(ServiceNames.DatabaseName);
+
+var migrationService = builder.AddProject<DiscordBot_DatabaseMigration>(ServiceNames.DatabaseMigration)
+    .WithReference(botData);
+
+#endregion
+
+// Add the distributed applications
+
+#region DiscordBot_Service
 
 var botService = builder
-    .AddProject<Projects.DiscordBot_Service>("bot-service")
-    .WithReference(discordBotDb);
+    .AddProject<Projects.DiscordBot_Service>(ServiceNames.DiscordBot)
+    .WithReference(botData);
+
+#endregion
+
+#region DiscordBot_API
+
+var botApi = builder
+    .AddProject<Projects.DiscordBot_API>(ServiceNames.DiscordBotApi)
+    .WithReference(botService)
+    .WithReference(botData);
+
+#endregion
 
 // Complete the builder configuration.
 await builder.Build().RunAsync();

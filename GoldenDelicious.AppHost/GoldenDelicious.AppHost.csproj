@@ -15,12 +15,13 @@
       <PackageReference Include="Aspire.Hosting.RabbitMQ" />
       <PackageReference Include="Aspire.Hosting.Redis" />
       <PackageReference Include="Aspire.Hosting.PostgreSQL" />
-      <PackageReference Include="Aspire.Hosting.Azure.CognitiveServices" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DiscordBot.API\DiscordBot.API.csproj" />
+    <ProjectReference Include="..\DiscordBot.DatabaseMigration\DiscordBot.DatabaseMigration.csproj" />
     <ProjectReference Include="..\DiscordBot.Service\DiscordBot.Service.csproj" />
+    <ProjectReference Include="..\GoldenDelicious.Common\GoldenDelicious.Common.csproj" IsAspireProjectResource="false" />
   </ItemGroup>
 
 </Project>

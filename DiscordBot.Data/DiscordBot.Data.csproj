@@ -10,7 +10,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL"/>
+        <PackageReference Include="Pgvector.EntityFrameworkCore"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\GoldenDelicious.Common\GoldenDelicious.Common.csproj" />
     </ItemGroup>
 
 </Project>

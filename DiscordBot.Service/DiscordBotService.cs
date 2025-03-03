@@ -5,35 +5,38 @@ using Microsoft.Extensions.Options;
 
 namespace GoldenDelicious.DiscordBot.Service;
 
-internal class DiscordBotService(
+public class DiscordBotService(
     ILogger<DiscordBotService> logger,
-    DiscordSocketClient client,
+    DiscordSocketClient discordClient,
     CommandService commandService,
     IOptions<DiscordBotOptions> settings,
-    CancellationTokenSource tokenSource
+    CancellationTokenSource tokenSource,
+    IServiceProvider serviceProvider
 ) : IHostedService
 {
     private readonly ILogger _logger = logger;
     private readonly DiscordBotOptions _settings = settings.Value;
+    
+    public readonly DiscordSocketClient DiscordClient = discordClient;
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        client.Log += Log;
+        DiscordClient.Log += Log;
         commandService.Log += Log;
-        client.MessageReceived += HandleCommandAsync;
+        DiscordClient.MessageReceived += HandleCommandAsync;
 
         // Register the command modules
-        await commandService.AddModulesAsync(typeof(DiscordBotService).Assembly, null);
+        await commandService.AddModulesAsync(typeof(DiscordBotService).Assembly, serviceProvider);
 
         // Login and connect.
-        await client.LoginAsync(TokenType.Bot, _settings.BotToken);
-        await client.StartAsync();
+        await DiscordClient.LoginAsync(TokenType.Bot, _settings.BotToken);
+        await DiscordClient.StartAsync();
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         await tokenSource.CancelAsync();
-        await client.StopAsync();
+        await DiscordClient.StopAsync();
         _logger.LogInformation("Shutdown complete");
     }
 
@@ -55,13 +58,13 @@ internal class DiscordBotService(
         // Determine if the message is a command based on the prefix and make sure no bots trigger commands
         bool isCommand =
             message.HasCharPrefix(_settings.CommandPrefix, ref argPos)
-            || message.HasMentionPrefix(client.CurrentUser, ref argPos);
+            || message.HasMentionPrefix(DiscordClient.CurrentUser, ref argPos);
 
         if (!isCommand || message.Author.IsBot)
             return;
 
         // Create a WebSocket-based command context based on the message
-        var context = new SocketCommandContext(client, message);
+        var context = new SocketCommandContext(DiscordClient, message);
 
         // Execute the command with the command context we just created, along with the service provider for precondition checks
         await commandService.ExecuteAsync(context, argPos, null);

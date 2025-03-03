@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>GoldenDelicious.DiscordBot.DatabaseMigration</RootNamespace>
+        <AssemblyName>GoldenDelicious.DiscordBot.DatabaseMigration</AssemblyName>
+        <UserSecretsId>aea8093f-4422-428c-909a-eabd1ea7b8d5</UserSecretsId>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\DiscordBot.Data\DiscordBot.Data.csproj" />
+        <ProjectReference Include="..\GoldenDelicious.Common\GoldenDelicious.Common.csproj" />
+        <ProjectReference Include="..\GoldenDelicious.ServiceDefaults\GoldenDelicious.ServiceDefaults.csproj" />
+    </ItemGroup>
+
+</Project>
